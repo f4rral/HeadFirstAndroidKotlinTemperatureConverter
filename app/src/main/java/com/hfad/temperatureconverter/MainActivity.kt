@@ -7,8 +7,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -21,6 +24,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             MainActivityContent()
         }
+    }
+}
+
+@Composable
+fun ConvertButton(clicked: () -> Unit) {
+    Button(
+        onClick = clicked
+    ) {
+        Text("Convert")
     }
 }
 
@@ -44,9 +56,12 @@ fun TemperatureText(celsius: Int) {
 
 @Composable
 fun MainActivityContent() {
+    val celsius = remember { mutableIntStateOf(0) }
+
     Column {
         Header(R.drawable.sunrise, "sunrise image")
-        TemperatureText(0)
+        ConvertButton { celsius.intValue = 20 }
+        TemperatureText(celsius.intValue)
     }
 }
 
