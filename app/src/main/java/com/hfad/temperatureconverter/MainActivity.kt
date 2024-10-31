@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -37,6 +39,16 @@ fun ConvertButton(clicked: () -> Unit) {
 }
 
 @Composable
+fun EnterTemperature(temperature: String, changed: (String) -> Unit) {
+    TextField(
+        value = temperature,
+        label = { Text("Enter a temperature in Celsius") },
+        onValueChange = changed,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 fun Header(image: Int, description: String) {
     Image(
         painter = painterResource(image),
@@ -57,10 +69,16 @@ fun TemperatureText(celsius: Int) {
 @Composable
 fun MainActivityContent() {
     val celsius = remember { mutableIntStateOf(0) }
+    val newCelsius = remember { mutableStateOf("") }
 
     Column {
         Header(R.drawable.sunrise, "sunrise image")
-        ConvertButton { celsius.intValue = 20 }
+        EnterTemperature(newCelsius.value) { newCelsius.value = it }
+        ConvertButton {
+            newCelsius.value.toIntOrNull()?.let {
+                celsius.intValue = it
+            }
+        }
         TemperatureText(celsius.intValue)
     }
 }
